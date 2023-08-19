@@ -1,6 +1,8 @@
 package my.example
 package dataprocessing
 
+import dataprocessing.Cons.cons
+
 sealed trait LazyStream[+A] { self =>
   import dataprocessing.Cons.cons
 
@@ -20,7 +22,15 @@ sealed trait LazyStream[+A] { self =>
     self.foldRight[LazyStream[B]](Nil)((a, acc) => cons(f(a), acc))
 }
 
-case class Cons[A] private(h: () => A, t: () => LazyStream[A]) extends LazyStream[A]
+case class Cons[A] private(h: () => A, t: () => LazyStream[A]) extends LazyStream[A] {
+  override def equals(that: Any): Boolean = {
+    that match {
+      case that: Cons[A] =>
+        this.h() == that.h() && this.t().equals(that.t())
+      case _ => false
+    }
+  }
+}
 
 object Cons {
   private def apply[A](h: () => A, t: () => LazyStream[A]): Cons[A] = new Cons(h, t)
@@ -36,3 +46,9 @@ case object Nil extends LazyStream[Nothing] {
 
 }
 
+object LazyStream {
+  def of[A](xs: A*): LazyStream[A] =
+    xs.foldRight[LazyStream[A]](Nil)((x, acc) => cons(x, acc))
+  def fromList[A](list: List[A]): LazyStream[A] =
+    list.foldRight[LazyStream[A]](Nil)((x, acc) => cons(x, acc))
+}
