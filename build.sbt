@@ -8,5 +8,7 @@ lazy val root = (project in file("."))
     idePackagePrefix := Some("my.example"),
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test,
     libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.7",
-    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.32"
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.32",
+    libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.13.12",
+    libraryDependencies += "org.typelevel" %% "cats-core" % "2.10.0"
   )
